@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Claim Request Management</title>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
+    <link rel="icon" th:href="@{/image/logo-page.png}" type="image/x-icon"/>
+
+    <!-- Fonts and icons -->
+    <script th:src="@{/assets/js/plugin/webfont/webfont.min.js}"></script>
+    <script>
+        WebFont.load({
+            google: {families: ["Public Sans:300,400,500,600,700"]},
+            custom: {
+                families: [
+                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Brands",
+                    "simple-line-icons",
+                ],
+                urls: ["assets/css/fonts.min.css"],
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            },
+        });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/plugins.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/kaiadmin.min.css}"/>
+    <style>
+        label{
+            font-weight: bold;
+        }
+        .error-message {
+            color: red; /* Màu đỏ */
+            font-weight: 300; /* Chữ mảnh */
+            font-size: 0.875rem; /* Kích thước chữ nhỏ hơn */
+        }
+    </style>
+</head>
+
+<body>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar" data-background-color="dark">
+        <div class="sidebar-logo">
+            <!-- Logo Header -->
+            <div class="logo-header" data-background-color="dark">
+                <a href="#" class="logo">
+                    <img th:src="@{/image/logo-page.png}" alt="navbar brand" class="navbar-brand" height="70"/>
+                </a>
+                <div class="nav-toggle">
+                    <button class="btn btn-toggle toggle-sidebar">
+                        <i class="gg-menu-right"></i>
+                    </button>
+                    <button class="btn btn-toggle sidenav-toggler">
+                        <i class="gg-menu-left"></i>
+                    </button>
+                </div>
+                <button class="topbar-toggler more">
+                    <i class="gg-more-vertical-alt"></i>
+                </button>
+            </div>
+            <!-- End Logo Header -->
+        </div>
+        <div class="sidebar-wrapper scrollbar scrollbar-inner">
+            <div class="sidebar-content">
+                <ul class="nav nav-secondary">
+                    <li class="nav-item">
+                        <a th:href="@{/admin/all-claim}">
+                            <i class="fas fa-file"></i>
+                            <p>All Claims</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+
+                    <li class="nav-item">
+                        <a data-bs-toggle="collapse" href="#configuration">
+                            <i class="fas fa-table"></i>
+                            <p>Configuration</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse" id="configuration">
+                            <ul class="nav nav-collapse">
+                                <li>
+                                    <a th:href="@{/admin/staff}">
+                                        <span class="sub-item">Staff Information</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/admin/project}">
+                                        <span class="sub-item">Project Information</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- End Sidebar -->
+
+    <div class="main-panel">
+        <div class="main-header">
+            <div class="main-header-logo">
+                <!-- Logo Header -->
+                <!-- End Logo Header -->
+            </div>
+            <!-- Navbar Header -->
+            <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+                <div class="container-fluid">
+                    <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+                        <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                               aria-expanded="false" aria-haspopup="true">
+                                <i class="fa fa-search"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-search animated fadeIn">
+                                <form class="navbar-left navbar-form nav-search">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="Search ..." class="form-control"/>
+                                    </div>
+                                </form>
+                            </ul>
+                        </li>
+                        <li class="nav-item topbar-user dropdown hidden-caret">
+                            <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#"
+                               aria-expanded="false">
+                  <span class="profile-username">
+                    <span class="op-7">Hi, </span>
+                    <span class="fw-bold" sec:authorize="isAuthenticated()">
+                        <span sec:authentication="principal.staffDB.firstName"></span>
+                        <span sec:authentication="principal.staffDB.lastName"></span>
+                    </span>
+                  </span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user animated fadeIn">
+                                <div class="dropdown-user-scroll scrollbar-outer">
+                                    <li>
+                                        <div class="user-box">
+                                            <div class="u-text">
+                                                <h4 class="fw-bold" sec:authorize="isAuthenticated()">
+                                                    <span sec:authentication="principal.staffDB.username"></span>
+                                                </h4>
+                                                <p class="text-muted" sec:authentication="principal.staffDB.email"></p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" th:href="@{/logout}">Logout</a>
+                                    </li>
+                                </div>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- End Navbar -->
+        </div>
+
+        <div class="container">
+            <div class="page-inner">
+                <div class="page-header">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <form id="createStaffForm" th:action="@{/admin/update-staff}" method="post" th:object="${staff}">
+                                    <div class="d-flex align-items-center">
+                                        <h4 class="card-title">Edit Staff</h4>
+                                        <button class="btn btn-primary btn-round ms-auto" type="submit" value="Create">
+                                            Save
+                                        </button>
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <input type="hidden" class="form-control" id="staffid" name="staffid"
+                                               placeholder="Enter staff ID" th:field="*{staffId}" readonly>
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="firstname" class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="firstname" name="firstname"
+                                               placeholder="Enter first name" th:field="*{firstName}">
+                                        <p th:errorclass="text-danger" th:errors="*{firstName}"></p>
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="lastname" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="lastname" name="lastname"
+                                               placeholder="Enter last name" th:field="*{lastName}">
+                                        <p th:errorclass="text-danger" th:errors="*{lastName}"></p>
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="phone" class="form-label">Phone Number</label>
+                                        <input type="text" class="form-control" id="phone" name="phone"
+                                               placeholder="Enter phone number"  th:field="*{phoneNumber}">
+                                        <p th:if="${#fields.hasErrors('phoneNumber')}" th:errorclass="text-danger" th:errors="*{phoneNumber}"></p>
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="salary" class="form-label">Salary</label>
+                                        <input type="number" class="form-control" id="salary" name="salary"
+                                               placeholder="Enter salary"  min="0" step="0.01"
+                                               th:field="*{salary}">
+                                        <p th:errorclass="text-danger" th:errors="*{salary}"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Gender</label><br/>
+                                        <div class="d-flex">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gender"
+                                                       id="gender1" th:value="Male" th:field="*{gender}"/>
+                                                <label class="form-check-label" for="gender1">Male</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gender"
+                                                       id="gender2" th:value="Female" th:field="*{gender}"/>
+                                                <label class="form-check-label" for="gender2">Female</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="department" class="form-label">Department</label>
+                                        <input type="text" class="form-control" id="department" name="department"
+                                               placeholder="Enter department" th:field="*{department}">
+                                        <p th:errorclass="text-danger" th:errors="*{department}"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Job Rank</label><br/>
+                                        <div class="d-flex">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="rank"
+                                                       id="admin" th:value="1" th:field="*{rank}" />
+                                                <label class="form-check-label" for="admin">ADMIN</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="rank"
+                                                       id="approver" th:value="2" th:field="*{rank}" />
+                                                <label class="form-check-label" for="approver">APPROVER</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="rank"
+                                                       id="claimer" th:value="3" th:field="*{rank}" />
+                                                <label class="form-check-label" for="claimer">CLAIMER</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="rank"
+                                                       id="finance" th:value="4" th:field="*{rank}" />
+                                                <label class="form-check-label" for="finance">FINANCE</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="email" class="form-label">Email address</label>
+                                        <input type="email" class="form-control" id="email" name="email"
+                                               placeholder="Enter email address"  th:field="*{email}">
+                                        <p th:if="${#fields.hasErrors('email')}" th:errorclass="text-danger" th:errors="*{email}"></p>
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="username" class="form-label">User Name</label>
+                                        <input type="text" class="form-control" id="username" name="username"
+                                               placeholder="Enter username"  th:field="*{username}">
+                                        <p th:if="${#fields.hasErrors('username')}" th:errorclass="text-danger" th:errors="*{username}"></p>
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="password" class="form-control" id="password" name="password"
+                                               placeholder="Leave blank to keep current password" th:field="*{password}">
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="confirm" class="form-label">Confirm Password</label>
+                                        <input type="password" class="form-control" id="confirm"
+                                               placeholder="Enter confirm password">
+                                        <div class="error-message mt-2" id="errorMessage"></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container-fluid d-flex justify-content-end">
+                <div class="fw-bold">
+                    Claim Request Management
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<!--   Core JS Files   -->
+<script th:src="@{/assets/js/core/jquery-3.7.1.min.js}"></script>
+<script th:src="@{/assets/js/core/popper.min.js}"></script>
+<script th:src="@{/assets/js/core/bootstrap.min.js}"></script>
+
+<!-- jQuery Scrollbar -->
+<script th:src="@{/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js}"></script>
+
+<!-- Datatables -->
+<script th:src="@{/assets/js/plugin/datatables/datatables.min.js}"></script>
+
+<!-- Kaiadmin JS -->
+<script th:src="@{/assets/js/kaiadmin.min.js}"></script>
+
+<script>
+    document.getElementById('createStaffForm').addEventListener('submit', function (event) {
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm').value;
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Reset error message
+        errorMessage.textContent = '';
+
+        if (password !== confirmPassword) {
+            errorMessage.textContent = "Passwords do not match.";
+            event.preventDefault(); // Ngăn không cho gửi form
+        }
+    });
+</script>
+<script>
+    $("#add-row").DataTable({
+        pageLength: 5,
+        searching: false,
+        info: false,
+        lengthChange: false,
+        ordering: false
+    });
+</script>
+</body>
+
+</html>

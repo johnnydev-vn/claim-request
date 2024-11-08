@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Claim Request Management</title>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+    <meta th:name="_csrf" th:content="${_csrf.token}">
+    <meta th:name="_csrf_header" th:content="${_csrf.headerName}">
+    <link rel="icon" th:href="@{/image/logo-page.png}" type="image/x-icon"/>
+
+    <!-- Fonts and icons -->
+    <script th:src="@{/assets/js/plugin/webfont/webfont.min.js}"></script>
+    <script>
+        WebFont.load({
+            google: { families: ["Public Sans:300,400,500,600,700"] },
+            custom: {
+                families: [
+                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Brands",
+                    "simple-line-icons",
+                ],
+                urls: ["/assets/css/fonts.min.css"],
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            },
+        });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/plugins.min.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/kaiadmin.min.css}" />
+</head>
+
+<body>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar" data-background-color="dark">
+        <div class="sidebar-logo">
+            <!-- Logo Header -->
+            <div class="logo-header" data-background-color="dark">
+                <a href="#" class="logo">
+                    <img th:src="@{/assets/img/fpt-logo.png}" alt="navbar brand" class="navbar-brand" height="70" />
+                </a>
+                <div class="nav-toggle">
+                    <button class="btn btn-toggle toggle-sidebar">
+                        <i class="gg-menu-right"></i>
+                    </button>
+                    <button class="btn btn-toggle sidenav-toggler">
+                        <i class="gg-menu-left"></i>
+                    </button>
+                </div>
+                <button class="topbar-toggler more">
+                    <i class="gg-more-vertical-alt"></i>
+                </button>
+            </div>
+            <!-- End Logo Header -->
+        </div>
+        <div class="sidebar-wrapper scrollbar scrollbar-inner">
+            <div class="sidebar-content">
+                <ul class="nav nav-secondary">
+                    <li class="nav-item">
+                        <a data-bs-toggle="collapse" href="#claimsAppoval">
+                            <i class="fas fa-th-list"></i>
+                            <p>Claims for Finance</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse" id="claimsAppoval">
+                            <ul class="nav nav-collapse">
+                                <li>
+                                    <a th:href="@{/finance/FinanceApproved}">
+                                        <span class="sub-item">Approved</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/finance/FinancePaid}">
+                                        <span class="sub-item">Paid</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- End Sidebar -->
+
+    <div class="main-panel">
+        <div class="main-header">
+            <div class="main-header-logo">
+                <!-- Logo Header -->
+                <div class="logo-header" data-background-color="dark">
+                    <a href="index.html" class="logo">
+                        <img th:src="@{/assets/img/kaiadmin/logo_light.svg}" alt="navbar brand" class="navbar-brand"
+                             height="20" />
+                    </a>
+                    <div class="nav-toggle">
+                        <button class="btn btn-toggle toggle-sidebar">
+                            <i class="gg-menu-right"></i>
+                        </button>
+                        <button class="btn btn-toggle sidenav-toggler">
+                            <i class="gg-menu-left"></i>
+                        </button>
+                    </div>
+                    <button class="topbar-toggler more">
+                        <i class="gg-more-vertical-alt"></i>
+                    </button>
+                </div>
+                <!-- End Logo Header -->
+            </div>
+            <!-- Navbar Header -->
+            <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+                <div class="container-fluid">
+                    <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+                        <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                               aria-expanded="false" aria-haspopup="true">
+                                <i class="fa fa-search"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-search animated fadeIn">
+                                <form class="navbar-left navbar-form nav-search">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="Search ..." class="form-control" />
+                                    </div>
+                                </form>
+                            </ul>
+                        </li>
+                        <li class="nav-item topbar-user dropdown hidden-caret">
+                            <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
+                  <span class="profile-username">
+                    <span class="op-7">Hi, </span>
+                    <span class="fw-bold" sec:authorize="isAuthenticated()">
+                        <span sec:authentication="principal.staffDB.firstName"></span>
+                        <span sec:authentication="principal.staffDB.lastName"></span>
+                    </span>
+                  </span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user animated fadeIn">
+                                <div class="dropdown-user-scroll scrollbar-outer">
+                                    <li>
+                                        <div class="user-box">
+                                            <div class="u-text">
+                                                <h4 class="fw-bold" sec:authorize="isAuthenticated()">
+                                                    <span sec:authentication="principal.staffDB.username"></span>
+                                                </h4>
+                                                <p class="text-muted" sec:authentication="principal.staffDB.email"></p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" th:href="@{/logout}">Logout</a>
+                                    </li>
+                                </div>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- End Navbar -->
+        </div>
+
+        <div class="container">
+            <div class="page-inner">
+                <div class="page-header">
+                    <div class="col-md-12">
+                        <form th:action="@{/claim/update}" th:object="${claim}" method="post" id="submitClaim">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h4 class="card-title">Claim Detail</h4>
+                                        <a th:href="@{/finance/paid(claimID=${claim.claimId})}"
+                                           class="btn btn-danger btn-border btn-round mx-1">
+                                            Paid
+                                        </a>
+
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="d-flex justify-content-between align-content-center p-3">
+                                                <h5 class="mb-0 d-flex align-items-md-center">Claim status:
+                                                    <span th:switch="${claim.status.name()}">
+                            <span th:case="DRAFT" class="badge badge-info fs-5" id="status" th:text="${claim.status.name()}"></span>
+                            <span th:case="PENDING_APPROVAL" class="badge badge-primary fs-5" id="status" th:text="${claim.status.name()}"></span>
+                            <span th:case="APPROVED" class="badge badge-success fs-5" id="status" th:text="${claim.status.name()}"></span>
+                            <span th:case="PAID" class="badge badge-warning fs-5" id="status" th:text="${claim.status.name()}"></span>
+                            <span th:case="REJECTED" class="badge badge-danger fs-5" id="status" th:text="${claim.status.name()}"></span>
+                            <span th:case="CANCELLED" class="badge badge-danger fs-5" id="status" th:text="${claim.status.name()}"></span>
+                          </span>
+                                                </h5>
+                                                <input class="text" th:field="*{status}" hidden="" />
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="d-flex justify-content-between">
+                                                        <h5>Staff ID:</h5>
+                                                        <h5 class="text-info" id="staffIdDisplay" th:text="${claim.staff.staffId}"></h5>
+                                                        <input type="text" th:field="*{staff}" hidden="" \>
+                                                        <input type="text" th:field="*{claimId}" hidden="" \>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="d-flex justify-content-between">
+                                                        <h5>Staff Name:</h5>
+                                                        <h5 class="text-info" th:text="${claim.staff.firstName + ' ' + claim.staff.lastName}">
+                                                        </h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="d-flex justify-content-between">
+                                                        <h5>Department:</h5>
+                                                        <h5 class="text-info" th:text="${claim.staff.department}"></h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-8">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="form-group">
+                                                        <label class="fs-4">Project Name</label>
+                                                        <select th:if="${claim.status.name() == 'DRAFT'}" id="projectDropdown" name="projectID" class="form-select form-control-lg"
+                                                                th:field="*{project}">
+                                                            <option value="x">--Select Project--</option>
+                                                            <option th:each="sp : ${staffProjects}" th:value="${sp.project.projectId}"
+                                                                    th:text="${sp.project.projectName}"
+                                                                    th:selected="${sp.project.projectId == claim.project.projectId}">
+                                                            </option>
+                                                        </select>
+                                                        <div class="fs-4" th:if="${claim.status.name() != 'DRAFT'}" th:text="${claim.project.projectName}"></div>
+                                                        <span th:if="${claim.status.name() != 'DRAFT'}" id="projectIdView" th:text="${claim.project.projectId}" hidden=""></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <h5>Role in project</h5>
+                                                            <p class="text-primary">
+                                                                <span id="role"></span>
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <h5>Project duration</h5>
+                                                            <p class="text-danger">
+                                                                <span id="duration"></span>
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <h5>Total working Hours</h5>
+                                                            <p class="text-success">
+                                  <span id="workingHourDisplay" th:text="${claim.totalWorkingHour + ' hour(s)'}">
+                                  </span>
+                                                            </p>
+                                                            <input type="number" id="inputWorkingHours"
+                                                                   th:field="*{totalWorkingHour}" hidden="" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="card border-top">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label class="fs-4">Remarks</label>
+                                                            <textarea th:if="${claim.status.name() == 'DRAFT'}" id="remarksClaim"
+                                                                      name="claim.remarksClaim" class="form-control" th:field="*{remarksClaim}">
+                              </textarea>
+                                                            <div th:if="${claim.status.name() != 'DRAFT'}" class="fs-4" th:text="${claim.remarksClaim}"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="d-flex align-items-center">
+                                        <h4 class="card-title">Claim Table</h4>
+                                        <button th:if="${claim.status.name() == 'DRAFT'}" class="btn btn-primary btn-round ms-auto btn-edit" type="button" data-bs-toggle="modal"
+                                                data-bs-target="#addMoreModal">
+                                            Add more
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table id="claimTable" class="display table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Day</th>
+                                                <th>From</th>
+                                                <th>To</th>
+                                                <th>Total No. of Hours</th>
+                                                <th>Remarks</th>
+                                                <th th:if="${claim.status.name() == 'DRAFT'}" style="width: 5%;"></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="claimDetailsTable">
+                                            <tr th:each="detail, iterStat : *{claimDetailsList}" class="countRow">
+                                                <!-- Input -->
+                                                <td hidden=""><input type="text" th:field="*{claimDetailsList[__${iterStat.index}__].id}">
+                                                <td hidden=""><input type="date" th:field="*{claimDetailsList[__${iterStat.index}__].dateClaim}"></td>
+                                                <td hidden=""><input type="text" th:field="*{claimDetailsList[__${iterStat.index}__].day}"></td>
+                                                <td hidden=""><input type="time" th:field="*{claimDetailsList[__${iterStat.index}__].fromTime}"></td>
+                                                <td hidden=""><input type="time" th:field="*{claimDetailsList[__${iterStat.index}__].toTime}"></td>
+                                                <td hidden=""><input type="number"
+                                                                     th:field="*{claimDetailsList[__${iterStat.index}__].totalNoOfHours}"></td>
+                                                <td hidden=""><input type="text" th:field="*{claimDetailsList[__${iterStat.index}__].remarksDetails}"></td>
+                                                <!-- Display -->
+                                                <td th:text="*{claimDetailsList[__${iterStat.index}__].dateClaim}"></td>
+                                                <td th:text="*{claimDetailsList[__${iterStat.index}__].day}"></td>
+                                                <td th:text="*{claimDetailsList[__${iterStat.index}__].fromTime}"></td>
+                                                <td th:text="*{claimDetailsList[__${iterStat.index}__].toTime}"></td>
+                                                <td th:text="*{claimDetailsList[__${iterStat.index}__].totalNoOfHours}"></td>
+                                                <td th:text="*{claimDetailsList[__${iterStat.index}__].remarksDetails}"></td>
+                                                <td th:if="${claim.status.name() == 'DRAFT'}">
+                                                    <button type="button" class="btn btn-danger btn-link removeDetailBtn">
+                                                        <i class="fa fa-times fs-4"></i>
+                                                    </button>
+                                                </td>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <input type="text" name="deletedDetailIds" id="deletedDetailIds" hidden="" />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="addMoreModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="exampleModalLabel">Add claim detail</h5>
+                </div>
+                <div class="modal-body">
+                    <form class="row" id="addMoreForm">
+                        <div class="form-group col-6">
+                            <label class="form-label">Date</label>
+                            <input type="date" class="form-control" id="date">
+                            <div class="invalid-feedback">Date is required.</div>
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label">Day</label>
+                            <input type="text" class="form-control" id="day" readonly>
+                        </div>
+                        <div class="form-group col-6 mt-3">
+                            <label class="form-label">From</label>
+                            <input type="time" class="form-control" id="fromTime" step="1">
+                            <div class="invalid-feedback">Must be earlier than or equal to To.</div>
+                        </div>
+                        <div class="form-group col-6 mt-3">
+                            <label class="form-label">To</label>
+                            <input type="time" class="form-control" id="toTime" step="1">
+                            <div class="invalid-feedback">Must be later than or equal to From.</div>
+                        </div>
+                        <div class="form-group col-12 mt-3">
+                            <label class="form-label">Total No. of Hours</label>
+                            <input type="number" class="form-control" id="hours" step="0.1">
+                            <div class="invalid-feedback">Hour Number is required and must be a valid number.</div>
+                        </div>
+                        <div class="form-group col-12 mt-3">
+                            <label class="form-label">Remarks</label>
+                            <input type="text" class="form-control" id="remarks">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="reset" class="btn btn-danger" id="reset">Reset</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close">Close</button>
+                            <button type="button" class="btn btn-primary" id="addRow">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="container-fluid d-flex justify-content-end">
+            <div class="fw-bold">
+                Claim Request Management
+            </div>
+        </div>
+    </footer>
+</div>
+</div>
+
+<!--   Core JS Files   -->
+<script th:src="@{/assets/js/core/jquery-3.7.1.min.js}"></script>
+<script th:src="@{/assets/js/core/popper.min.js}"></script>
+<script th:src="@{/assets/js/core/bootstrap.min.js}"></script>
+
+<!-- jQuery Scrollbar -->
+<script th:src="@{/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js}"></script>
+
+<!-- Datatables -->
+<script th:src="@{/assets/js/plugin/datatables/datatables.min.js}"></script>
+
+<!-- Kaiadmin JS -->
+<script th:src="@{/assets/js/kaiadmin.min.js}"></script>
+
+<script>
+    let claimDetailsCount = [[${#lists.size(claim.claimDetailsList)}]];
+    let isUpdate = true;
+</script>
+
+<!-- claim Table script -->
+<script th:src="@{/assets/js/claim.js}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Claim Request Management</title>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
+    <link rel="icon" th:href="@{/image/logo-page.png}" type="image/x-icon"/>
+
+    <!-- Include Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet"/>
+
+    <!-- Fonts and icons -->
+    <script th:src="@{/assets/js/plugin/webfont/webfont.min.js}"></script>
+    <script>
+        WebFont.load({
+            google: {families: ["Public Sans:300,400,500,600,700"]},
+            custom: {
+                families: [
+                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Brands",
+                    "simple-line-icons",
+                ],
+                urls: ["assets/css/fonts.min.css"],
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            },
+        });
+    </script>
+
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/plugins.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/kaiadmin.min.css}"/>
+    <style>
+        label {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        select {
+            width: 100%;
+            min-height: 100px;
+            border-radius: 3px;
+            border: 1px solid #444;
+            padding: 10px;
+            color: #444444;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="wrapper">
+    <input type="hidden" th:value="${staffListByRankJSON}" id="staffList">
+    <input type="hidden" th:value="${projectDTO.projectId}" id="prodtoId">
+    <!-- Sidebar -->
+    <div class="sidebar" data-background-color="dark">
+        <div class="sidebar-logo">
+            <!-- Logo Header -->
+            <div class="logo-header" data-background-color="dark">
+                <a href="#" class="logo">
+                    <img th:src="@{/image/logo-page.png}" alt="navbar brand" class="navbar-brand" height="70"/>
+                </a>
+                <div class="nav-toggle">
+                    <button class="btn btn-toggle toggle-sidebar">
+                        <i class="gg-menu-right"></i>
+                    </button>
+                    <button class="btn btn-toggle sidenav-toggler">
+                        <i class="gg-menu-left"></i>
+                    </button>
+                </div>
+                <button class="topbar-toggler more">
+                    <i class="gg-more-vertical-alt"></i>
+                </button>
+            </div>
+            <!-- End Logo Header -->
+        </div>
+        <div class="sidebar-wrapper scrollbar scrollbar-inner">
+            <div class="sidebar-content">
+                <ul class="nav nav-secondary">
+                    <li class="nav-item">
+                        <a href="#">
+                            <i class="fas fa-file"></i>
+                            <p>All Claims</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+
+                    <li class="nav-item">
+                        <a data-bs-toggle="collapse" href="#configuration">
+                            <i class="fas fa-table"></i>
+                            <p>Configuration</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse" id="configuration">
+                            <ul class="nav nav-collapse">
+                                <li>
+                                    <a th:href="@{/admin/staff}">
+                                        <span class="sub-item">Staff Information</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/admin/project}">
+                                        <span class="sub-item">Project Information</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- End Sidebar -->
+
+    <div class="main-panel">
+        <div class="main-header">
+            <div class="main-header-logo">
+                <!-- Logo Header -->
+                <!-- End Logo Header -->
+            </div>
+            <!-- Navbar Header -->
+            <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+                <div class="container-fluid">
+                    <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+                        <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                               aria-expanded="false" aria-haspopup="true">
+                                <i class="fa fa-search"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-search animated fadeIn">
+                                <form class="navbar-left navbar-form nav-search">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="Search ..." class="form-control"/>
+                                    </div>
+                                </form>
+                            </ul>
+                        </li>
+                        <li class="nav-item topbar-user dropdown hidden-caret">
+                            <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#"
+                               aria-expanded="false">
+                  <span class="profile-username">
+                    <span class="op-7">Hi, </span>
+                    <span class="fw-bold" sec:authorize="isAuthenticated()">
+                        <span sec:authentication="principal.staffDB.firstName"></span>
+                        <span sec:authentication="principal.staffDB.lastName"></span>
+                    </span>
+                  </span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user animated fadeIn">
+                                <div class="dropdown-user-scroll scrollbar-outer">
+                                    <li>
+                                        <div class="user-box">
+                                            <div class="u-text">
+                                                <h4 class="fw-bold" sec:authorize="isAuthenticated()">
+                                                    <span sec:authentication="principal.staffDB.username"></span>
+                                                </h4>
+                                                <p class="text-muted" sec:authentication="principal.staffDB.email"></p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" th:href="@{/logout}">Logout</a>
+                                    </li>
+                                </div>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- End Navbar -->
+        </div>
+
+        <div class="container">
+            <div class="page-inner">
+                <div class="page-header">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <form th:action="@{/admin/save-project}" method="post" th:object="${projectDTO}">
+                                    <div class="d-flex align-items-center">
+                                        <h4 class="card-title">Create New Project</h4>
+                                        <button class="btn btn-primary btn-round ms-auto" type="submit" value="Create">
+                                            Save
+                                        </button>
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="projectid" class="form-label">Project ID</label>
+                                        <input type="text" class="form-control" id="projectid" name="projectid"
+                                               placeholder="Enter project ID" th:field="*{projectId}">
+                                        <p th:if="${#fields.hasErrors('projectId')}" th:errorclass="text-danger" th:errors="*{projectId}"></p>
+
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="projectname" class="form-label">Project Name</label>
+                                        <input type="text" class="form-control" id="projectname" name="projectname"
+                                               placeholder="Enter project name" th:field="*{projectName}">
+                                        <p th:if="${#fields.hasErrors('projectName')}" th:errorclass="text-danger" th:errors="*{projectName}"></p>
+                                    </div>
+
+                                    <div class="col-12 mt-3">
+                                        <label for="from" class="form-label">From</label>
+                                        <input type="date" class="form-control" id="from" name="from"
+                                               placeholder="Enter start date" th:field="*{startDate}">
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="to" class="form-label">To</label>
+                                        <input type="date" class="form-control" id="to" name="to"
+                                               placeholder="Enter end date" th:field="*{endDate}">
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="customername" class="form-label">Customer Name</label>
+                                        <input type="text" class="form-control" id="customername" name="customername"
+                                               placeholder="Enter customer name" th:field="*{customerName}">
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="budget" class="form-label">Budget</label>
+                                        <input type="number" class="form-control" id="budget" name="budget"
+                                               placeholder="Enter budget" th:field="*{budget}">
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <div class="card-title">Add Staff Information</div>
+                                        </div>
+                                        <div class="card-body">
+                                            <table class="table table-head-bg-primary mt-4">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">Role</th>
+                                                    <th scope="col">Staff Email</th>
+                                                    <th scope="col">Start Date</th>
+                                                    <th scope="col">End Date</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="staffProject : ${projectDTO.staffProjectListDTO}">
+                                                    <td>
+                                                        <div class="col-12 mt-3">
+                                                            <label for="position" class="form-label">Position</label>
+                                                            <select class="form-select form-control-lg" id="position"
+                                                                    th:field="*{staffProject.role}" name="">
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="col-12 mt-3">
+                                                            <label for="namestaff" class="form-label">Email</label>
+                                                            <select class="form-select form-control-lg" id="namestaff"
+                                                                    th:field="*{staffProject.staffId}" name="">
+                                                                <option value="">select</option>
+                                                                <option th:each="namestaff : ${staffListByRank}"
+                                                                        th:value="${namestaff.staffId}"
+                                                                        th:text="${namestaff.email}">
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="col-12 mt-3">
+                                                            <label for="stdate" class="form-label">Start Date</label>
+                                                            <input type="date" class="form-control" id="stdate"
+                                                                   name=""
+                                                                   placeholder="Enter start date of staff"
+                                                                   th:field="*{staffProject.startDate}">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="col-12 mt-3">
+                                                            <label for="enddate" class="form-label">End Date</label>
+                                                            <input type="date" class="form-control" id="enddate" name=""
+                                                                   placeholder="Enter end date of staff"
+                                                                   th:field="*{staffProject.endDate}">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                            <!-- Button to add new row -->
+                                            <div class="col-12 mt-3 text-center">
+                                                <button type="button" class="btn btn-success" id="add-row">
+                                                    <i class="fas fa-plus"></i> Add Row
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container-fluid d-flex justify-content-end">
+                <div class="fw-bold">
+                    Claim Request Management
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<!--   Core JS Files   -->
+<script th:src="@{/assets/js/core/jquery-3.7.1.min.js}"></script>
+<script th:src="@{/assets/js/core/popper.min.js}"></script>
+<script th:src="@{/assets/js/core/bootstrap.min.js}"></script>
+
+<!-- jQuery Scrollbar -->
+<script th:src="@{/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js}"></script>
+
+<!-- Datatables -->
+<script th:src="@{/assets/js/plugin/datatables/datatables.min.js}"></script>
+
+<!-- Kaiadmin JS -->
+<script th:src="@{/assets/js/kaiadmin.min.js}"></script>
+
+<!-- Include Select2 JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<!-- Script to add new row -->
+<script>
+    // Script thêm hàng mới khi nhấn nút "Add Row"
+    document.getElementById('add-row').addEventListener('click', function () {
+        var newRow = document.createElement('tr');
+        newRow.innerHTML = `
+        <td>
+            <div class="col-12 mt-3">
+                <select class="position form-select form-control-lg">
+                    <option value="">select position</option>
+                    <option value="PM">PM</option>
+                    <option value="QA">QA</option>
+                    <option value="TECHNICAL_LEAD">Technical Lead</option>
+                    <option value="BA">BA</option>
+                    <option value="TESTER">Tester</option>
+                    <option value="DEVELOPER">Developer</option>
+                    <option value="TECHNICAL_CONSULTANCY">Technical Consultancy</option>
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="col-12 mt-3">
+                <select class="person form-select form-control-lg">
+                    <option value="">select</option>
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="col-12 mt-3">
+                <input  type="date" class="sdate form-control">
+            </div>
+        </td>
+        <td>
+            <div class="col-12 mt-3">
+                <input  type="date" class="edate form-control">
+            </div>
+        </td>
+        </tr>
+    `;
+
+        let table = document.querySelector('table tbody');
+        table.appendChild(newRow);
+        updateChild(newRow);
+        updateNameInput(table);
+    });
+
+    function updateNameInput(tableDom) {
+        tableDom.querySelectorAll('select[class*=position]').forEach(function (dom, index) {
+            dom.name = "staffProjectListDTO[" + index + "].position";
+        });
+
+        tableDom.querySelectorAll('select[class*=person]').forEach(function (dom, index) {
+            dom.name = "staffProjectListDTO[" + index + "].staffId";
+        });
+
+        tableDom.querySelectorAll('input[class*=sdate]').forEach(function (dom, index) {
+            dom.name = "staffProjectListDTO[" + index + "].startDate";
+        });
+
+        tableDom.querySelectorAll('input[class*=edate]').forEach(function (dom, index) {
+            dom.name = "staffProjectListDTO[" + index + "].endDate";
+        });
+    }
+
+    function updateChild(newRow) {
+        let staffList = document.getElementById('staffList').value;
+        let arrArrayStaff = JSON.parse(staffList); // Chuyển danh sách staff từ chuỗi JSON thành mảng
+
+        // Lấy danh sách các giá trị đã chọn từ các dropdown hiện có
+        let selectedValues = [];
+        document.querySelectorAll('select[class*=person]').forEach(function (select) {
+            if (select.value) {
+                selectedValues.push(select.value); // Thêm các giá trị đã được chọn vào mảng
+            }
+        });
+
+        // Lọc bỏ những giá trị đã được chọn khỏi danh sách staff
+        let filteredStaffList = arrArrayStaff.filter(function (staff) {
+            return !selectedValues.includes(staff.staffId); // Chỉ giữ những staffId chưa được chọn
+        });
+
+        // Tạo lại danh sách tùy chọn cho dòng mới
+        let select = newRow.querySelector('select[class*=person]');
+        let html = '<option>select</option>'; // Tùy chọn mặc định
+        filteredStaffList.forEach(function (staff) {
+            html += `<option value="${staff.staffId}">${staff.email}</option>`;
+        });
+        select.innerHTML = html; // Cập nhật lại danh sách tùy chọn cho dropdown mới
+    }
+</script>
+
+</body>
+
+</html>
